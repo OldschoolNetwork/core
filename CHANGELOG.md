@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.53 — 2026-10-19
+
+Core 0.53 fixes the Store download and onboarding flows.
+
+- Download progress and errors are visible inside Core as well as in notifications. A verified download leaves an Install button on screen, including after reopening the page.
+- Fixed APK staging before package verification; downloads keep the device awake while running.
+- Added a shortcut to notification settings when download notifications are disabled.
+- Opening the Store entry when Store is missing now opens the download screen.
+- Onboarding keeps its current step when the screen rotates. A delayed initial network check no longer returns it to the first screen.
+- Replaced the remote verification WebView with a native screen. This alpha does not send email codes; the screen explicitly explains that Send continues the flow.
+- Saved account selection uses server-issued tokens and private account data, without recreating email-labelled public system accounts.
+
+Android 4.0 / API 14 or newer; universal APK. Signed with the same persistent ON key as 0.52. Core download, notification, account and rotation scenarios were checked on Android 5.1. Root installation still needs physical-device testing.
+
 ## 0.52 — 2026-10-19
 
 ON Core Services 0.52 adds system account integration and service updates.
