@@ -4,10 +4,10 @@ The account and shared service layer for Oldschool Network on classic Android de
 
 ## Download
 
-Current build: **alpha 0.52**, version code **7**.
+Current build: **alpha 0.53**, version code **8**.
 
-- [Download ON Core Services](https://github.com/OldschoolNetwork/core/releases/download/alpha-0.52/ON-Core-Services-0.52.apk)
-- [Release notes and checksums](https://github.com/OldschoolNetwork/core/releases/tag/alpha-0.52)
+- [Download ON Core Services](https://github.com/OldschoolNetwork/core/releases/download/alpha-0.53/ON-Core-Services-0.53.apk)
+- [Release notes and checksums](https://github.com/OldschoolNetwork/core/releases/tag/alpha-0.53)
 - [All ON downloads](https://oldschoolnetwork.online/downloads/)
 
 Android **4.0 / API 14 or newer**. This is a universal APK. It uses the persistent Oldschool Network signing key.
