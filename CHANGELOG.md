@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.55 — 2026-10-19
+
+Core 0.55 fixes a crash after password entry. Both sign-in and registration now focus the native verification button instead of the removed verification WebView. Built successfully and signed with the persistent ON key. Physical Mi 5 retesting is still needed.
+
 ## 0.54 — 2026-10-19
 
 Core 0.54 adds automatic service installation after full setup.
