@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.54 — 2026-10-19
+
+Core 0.54 adds automatic service installation after full setup.
+
+- Full system installations can download and silently install updates for Core and Store. Store is updated first, Core last.
+- Installation state survives replacement of Core's own process. Android confirms the installed version and ON certificate before the update is marked complete.
+- Automatic checks and automatic download/install have separate switches. Disabling automatic updates stops the background download and prevents the next installation; manual downloads remain available.
+- Ordinary installations keep the Download and Install buttons and Android confirmation. If privileged installation needs confirmation, the verified APK stays available for manual installation.
+- The Services screen now reports the actual full or ordinary installation status.
+
+Android 4.0 / API 14 or newer; universal APK. Signed with the persistent ON key. On an isolated Android 5.1 emulator, privileged Core downloaded and updated Store without Android's installer UI, then successfully replaced itself and recovered the saved result. Root fallback and physical ROM behaviour still need device testing.
+
 ## 0.53 — 2026-10-19
 
 Core 0.53 fixes the Store download and onboarding flows.
