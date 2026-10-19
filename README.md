@@ -4,17 +4,17 @@ The account and shared service layer for Oldschool Network on classic Android de
 
 ## Download
 
-Current build: **alpha 0.53**, version code **8**.
+Current build: **alpha 0.54**, version code **9**.
 
-- [Download ON Core Services](https://github.com/OldschoolNetwork/core/releases/download/alpha-0.53/ON-Core-Services-0.53.apk)
-- [Release notes and checksums](https://github.com/OldschoolNetwork/core/releases/tag/alpha-0.53)
+- [Download ON Core Services](https://github.com/OldschoolNetwork/core/releases/download/alpha-0.54/ON-Core-Services-0.54.apk)
+- [Release notes and checksums](https://github.com/OldschoolNetwork/core/releases/tag/alpha-0.54)
 - [All ON downloads](https://oldschoolnetwork.online/downloads/)
 
 Android **4.0 / API 14 or newer**. This is a universal APK. It uses the persistent Oldschool Network signing key.
 
 ## What it does
 
-Core manages ON Account sign-in, onboarding and Android system accounts. It supplies the account interface used by ON Store and checks published updates for Core and Store. Scheduled update checks can be turned off.
+Core manages ON Account sign-in, onboarding and Android system accounts. It supplies the account interface used by ON Store and checks published updates for Core and Store. Scheduled update checks can be turned off. Full system installations can download and install service updates automatically; this has a separate switch.
 
 If you install Core on its own, use its Updates screen to get Store once a compatible Store release is published in the ON catalog.
 
