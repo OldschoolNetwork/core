@@ -2,7 +2,7 @@
 
 The account and shared service layer for Oldschool Network on classic Android devices.
 
-Current alpha: **0.56** (version code 11). Android 4.0 / API 14 or later.
+Current alpha: **0.57** (version code 12). Android 4.0 / API 14 or later.
 
 ## Features
 
