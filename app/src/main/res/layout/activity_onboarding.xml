@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_core_main">
+
+    <ViewFlipper
+        android:id="@+id/onboardingFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@android:anim/slide_in_left"
+        android:outAnimation="@android:anim/slide_out_right">
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="200dp" app:srcCompat="@drawable/on_emblem" android:layout_centerInParent="true" android:alpha="0.1"/>
+            <TextView android:id="@+id/tvVerifyStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Verifying details..." android:textColor="#00BCD4" android:textSize="32sp" android:fontFamily="sans-serif-light" android:layout_above="@+id/verifyProgress" android:layout_marginBottom="16dp" android:layout_marginLeft="24dp" android:layout_marginStart="24dp"/>
+            <ProgressBar android:id="@+id/verifyProgress" style="@android:style/Widget.Holo.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true" android:layout_alignParentBottom="true"/>
+            <Button android:id="@+id/btnTryAgainVerify" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Try Again" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:layout_marginBottom="40dp" android:visibility="gone" android:background="@drawable/btn_outline_gray" android:textColor="#FFFFFF"/>
+        </RelativeLayout>
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="16dp" android:layout_weight="0">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="One account for all your needs" android:textColor="#CCCCCC" android:fontFamily="sans-serif-light" android:layout_marginTop="8dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Log in" android:textColor="#00BCD4" android:textSize="32sp" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email or ON ID" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                            <EditText android:id="@+id/etLoginEmail" android:layout_width="match_parent" android:layout_height="50dp" android:hint="example@mail.com" android:textColorHint="#555555" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:singleLine="true" android:scrollHorizontally="true"/>
+                            <TextView android:id="@+id/tvLoginEmailError" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Field cannot be empty" android:textColor="#FF5252" android:textSize="12sp" android:visibility="gone" android:layout_marginTop="4dp" android:fontFamily="sans-serif"/>
+
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Forgot your email or ON ID?" android:onClick="openAccountRecovery" android:clickable="true" android:focusable="true" android:textColor="#888888" android:textSize="12sp" android:fontFamily="sans-serif" android:gravity="center" android:layout_marginTop="12dp"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Or" android:textColor="#FFFFFF" android:textSize="20sp" android:gravity="center" android:layout_marginTop="24dp" android:layout_marginBottom="24dp" android:fontFamily="sans-serif-light"/>
+                            <Button android:id="@+id/btnGoToCreate" android:layout_width="match_parent" android:layout_height="50dp" android:text="Create ON Account" android:textColor="#00BCD4" android:fontFamily="sans-serif" android:background="@drawable/btn_outline_blue" android:textAllCaps="false"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="0" android:layout_marginTop="16dp">
+                        <TextView android:id="@+id/btnBackLogin" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Back" android:textColor="#00BCD4" android:textSize="20sp" android:fontFamily="sans-serif-light" android:layout_centerVertical="true" android:clickable="true"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextLogin" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:padding="12dp" app:tint="#FFFFFF"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
+            <ProgressBar android:id="@+id/pbLoginEmail" style="@android:style/Widget.Holo.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true" android:visibility="gone" android:layout_alignParentTop="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="16dp" android:layout_weight="0">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                        <TextView android:id="@+id/tvLoginWelcomeTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Welcome back!" android:textColor="#00BCD4" android:textSize="28sp" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light" android:gravity="center"/>
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="12dp">
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/ivLoginAvatar" android:layout_width="32dp" android:layout_height="32dp" app:srcCompat="@drawable/ic_profile_placeholder" />
+                            <TextView android:id="@+id/tvLoginSubtitleEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="user@mail.com" android:textColor="#888888" android:textSize="14sp" android:fontFamily="sans-serif-light" android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:background="@drawable/bg_input_on">
+                                <EditText android:id="@+id/etLoginPassword" android:layout_width="match_parent" android:layout_height="50dp" android:hint="MyPassword123" android:textColorHint="#555555" android:background="@null" android:textColor="#FFFFFF" android:padding="12dp" android:inputType="textPassword" android:singleLine="true" android:scrollHorizontally="true"/>
+                                <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnLoginPasswordVis" android:layout_width="48dp" android:layout_height="48dp" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:padding="12dp" app:srcCompat="@drawable/ic_eye_open" app:tint="#FFFFFF" android:clickable="true"/>
+                            </RelativeLayout>
+                            <TextView android:id="@+id/tvLoginPassError" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Incorrect password. Try again." android:textColor="#FF5252" android:textSize="12sp" android:visibility="gone" android:layout_marginTop="4dp" android:fontFamily="sans-serif"/>
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Forgot your password?" android:onClick="openAccountRecovery" android:clickable="true" android:focusable="true" android:textColor="#888888" android:textSize="12sp" android:fontFamily="sans-serif" android:gravity="center" android:layout_marginTop="12dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="0" android:layout_marginTop="16dp">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackLoginPass" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextLoginPass" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" app:tint="#FFFFFF"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </ScrollView>
+            <ProgressBar android:id="@+id/pbLoginPass" style="@android:style/Widget.Holo.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true" android:visibility="gone" android:layout_alignParentTop="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="16dp" android:layout_weight="0">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Create ON Account" android:textColor="#00BCD4" android:textSize="28sp" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email or phone number" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                            <EditText android:id="@+id/etCreateEmail" android:layout_width="match_parent" android:layout_height="50dp" android:hint="example@mail.com" android:textColorHint="#555555" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:inputType="textEmailAddress" android:singleLine="true" android:scrollHorizontally="true"/>
+                            <TextView android:id="@+id/tvCreateEmailError" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Invalid email address" android:textColor="#FF5252" android:textSize="12sp" android:visibility="gone" android:layout_marginTop="4dp" android:fontFamily="sans-serif"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="0" android:layout_marginTop="16dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="32dp" android:layout_height="32dp" android:onClick="openAccountHelp" android:contentDescription="Account help" android:clickable="true" android:focusable="true" app:srcCompat="@drawable/ic_help" android:layout_centerVertical="true" app:tint="#FFFFFF"/>
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackCreateEmail" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextCreateEmail" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" app:tint="#FFFFFF"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
+            <ProgressBar android:id="@+id/pbCreateEmail" style="@android:style/Widget.Holo.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true" android:visibility="gone" android:layout_alignParentTop="true"/>
+        </RelativeLayout>
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="16dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Create a password" android:textColor="#00BCD4" android:textSize="28sp" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_centerInParent="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:background="@drawable/bg_input_on">
+                        <EditText android:id="@+id/etCreatePassword" android:layout_width="match_parent" android:layout_height="50dp" android:hint="MyPassword123" android:textColorHint="#555555" android:background="@null" android:textColor="#FFFFFF" android:padding="12dp" android:inputType="textPassword" android:singleLine="true" android:scrollHorizontally="true"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnCreatePasswordVis" android:layout_width="48dp" android:layout_height="48dp" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:padding="12dp" app:srcCompat="@drawable/ic_eye_open" app:tint="#FFFFFF" android:clickable="true"/>
+                    </RelativeLayout>
+                    <TextView android:id="@+id/tvCreatePassError" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Use 8+ characters with a mix of letters and numbers" android:textColor="#FF5252" android:textSize="12sp" android:visibility="gone" android:layout_marginTop="4dp" android:fontFamily="sans-serif"/>
+                </LinearLayout>
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_marginTop="32dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="32dp" android:layout_height="32dp" android:onClick="openAccountHelp" android:contentDescription="Account help" android:clickable="true" android:focusable="true" app:srcCompat="@drawable/ic_help" android:layout_centerVertical="true" app:tint="#FFFFFF"/>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackCreatePass" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextCreatePass" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" app:tint="#FFFFFF"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+            <TextView android:id="@+id/tvOtpHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verification" android:textColor="#00BCD4" android:textSize="28sp" android:gravity="center" android:paddingTop="32dp" android:paddingBottom="16dp" android:fontFamily="sans-serif-light"/>
+            <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+              <TextView android:id="@+id/otpAvailabilityNotice" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Email verification is not implemented in this alpha. No code is sent. Tap Send to continue." android:textColor="#FFFFFF" android:textSize="18sp" android:paddingBottom="24dp"/>
+              <Button android:id="@+id/btnSendOtp" android:layout_width="match_parent" android:layout_height="52dp" android:text="Send" android:textColor="#FFFFFF" android:background="@drawable/btn_outline_blue"/>
+             </LinearLayout></ScrollView>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp" android:padding="16dp">
+                <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackOtp" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_centerVertical="true" app:tint="#FFFFFF"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="16dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="What should we call you?" android:textColor="#00BCD4" android:textSize="26sp" android:gravity="center" android:layout_marginTop="16dp" android:fontFamily="sans-serif-light"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_centerInParent="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Name" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    <EditText android:id="@+id/etRegName" android:layout_width="match_parent" android:layout_height="50dp" android:hint="User" android:textColorHint="#555555" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:singleLine="true" android:scrollHorizontally="true"/>
+                    <TextView android:id="@+id/tvNameCounter" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0/50" android:textColor="#888888" android:textSize="11sp" android:gravity="end" android:layout_marginTop="2dp" android:fontFamily="sans-serif"/>
+                    <TextView android:id="@+id/tvDetailsError" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Name cannot be empty" android:textColor="#FF5252" android:textSize="12sp" android:visibility="gone" android:layout_marginTop="4dp" android:layout_marginBottom="8dp" android:fontFamily="sans-serif"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Surname (optional)" android:textColor="#FFFFFF" android:textSize="12sp" android:fontFamily="sans-serif" android:layout_marginTop="8dp"/>
+                    <EditText android:id="@+id/etRegSurname" android:layout_width="match_parent" android:layout_height="50dp" android:hint="Userovich" android:textColorHint="#555555" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:singleLine="true" android:scrollHorizontally="true"/>
+                    <TextView android:id="@+id/tvSurnameCounter" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0/50" android:textColor="#888888" android:textSize="11sp" android:gravity="end" android:layout_marginTop="2dp" android:fontFamily="sans-serif"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Username" android:textColor="#FFFFFF" android:textSize="12sp" android:fontFamily="sans-serif" android:layout_marginTop="16dp"/>
+                    <EditText android:id="@+id/etRegUsername" android:layout_width="match_parent" android:layout_height="50dp" android:hint="example (auto-generated)" android:textColorHint="#555555" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:singleLine="true" android:scrollHorizontally="true"/>
+                    <TextView android:id="@+id/tvUsernameCounter" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0/25" android:textColor="#888888" android:textSize="11sp" android:gravity="end" android:layout_marginTop="2dp" android:fontFamily="sans-serif"/>
+                </LinearLayout>
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_marginTop="32dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="32dp" android:layout_height="32dp" android:onClick="openAccountHelp" android:contentDescription="Account help" android:clickable="true" android:focusable="true" app:srcCompat="@drawable/ic_help" android:layout_centerVertical="true" app:tint="#FFFFFF"/>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackDetails" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextDetails" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" app:tint="#FFFFFF"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Terms and conditions" android:textColor="#00BCD4" android:textSize="28sp" android:gravity="center" android:paddingTop="32dp" android:paddingBottom="16dp" android:fontFamily="sans-serif-light"/>
+            <WebView android:id="@+id/termsWebView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:background="#FFFFFF"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="80dp" android:padding="16dp">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                    <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackTerms" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                    <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextTerms" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" android:alpha="0.3" android:clickable="false" app:tint="#FFFFFF"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:layout_marginTop="32dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="70dp" app:srcCompat="@drawable/on_account_logo" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Is everything correct?" android:textColor="#00BCD4" android:textSize="28sp" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#33FFFFFF" android:layout_marginTop="16dp" android:layout_marginBottom="16dp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_centerInParent="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email or ON ID" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    <TextView android:id="@+id/tvConfirmEmail" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_input_on" android:textColor="#FFFFFF" android:padding="12dp" android:layout_marginTop="4dp" android:gravity="center_vertical" android:textSize="16sp" android:fontFamily="sans-serif"/>
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:textColor="#00BCD4" android:textSize="12sp" android:fontFamily="sans-serif" android:layout_marginTop="16dp"/>
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:background="@drawable/bg_input_on">
+                        <EditText android:id="@+id/etConfirmPassword" android:layout_width="match_parent" android:layout_height="50dp" android:background="@null" android:textColor="#FFFFFF" android:padding="12dp" android:inputType="textPassword" android:enabled="false" android:singleLine="true" android:scrollHorizontally="true"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnConfirmPasswordVis" android:layout_width="48dp" android:layout_height="48dp" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:padding="12dp" app:srcCompat="@drawable/ic_eye_open" app:tint="#FFFFFF" android:clickable="true"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_marginTop="32dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackConfirm" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                        <Button android:id="@+id/btnNextConfirm" android:layout_width="match_parent" android:layout_height="50dp" android:text="Create ON Account" android:textColor="#00BCD4" android:fontFamily="sans-serif" android:background="@drawable/btn_outline_blue" android:textAllCaps="false"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <androidx.appcompat.widget.AppCompatImageView android:layout_width="200dp" android:layout_height="200dp" app:srcCompat="@drawable/on_emblem" android:layout_centerInParent="true" android:alpha="0.1"/>
+            <TextView android:id="@+id/tvSetupStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Setting up services for you.\nThis may take a while." android:textColor="#00BCD4" android:textSize="26sp" android:fontFamily="sans-serif-light" android:layout_above="@+id/setupProgress" android:layout_marginBottom="16dp" android:gravity="center" android:paddingLeft="24dp" android:paddingRight="24dp"/>
+            <ProgressBar android:id="@+id/setupProgress" style="@android:style/Widget.Holo.ProgressBar.Horizontal" android:layout_width="match_parent" android:layout_height="4dp" android:indeterminate="true" android:layout_alignParentBottom="true"/>
+            <Button android:id="@+id/btnTryAgainSetup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Try Again" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:layout_marginBottom="40dp" android:visibility="gone" android:background="@drawable/btn_outline_gray" android:textColor="#FFFFFF"/>
+        </RelativeLayout>
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="24dp">
+                <TextView android:id="@+id/tvParamsTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Set up your parameters" android:textColor="#00BCD4" android:textSize="26sp" android:gravity="center" android:layout_marginTop="32dp" android:fontFamily="sans-serif-light"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_vertical" android:layout_centerInParent="true" android:layout_marginTop="24dp" android:layout_marginBottom="24dp">
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/icCloud" android:layout_width="48dp" android:layout_height="48dp" app:srcCompat="@drawable/ic_cloud_glass" android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:layout_marginTop="4dp"/>
+                        <CheckBox android:id="@+id/cbCloud" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_alignTop="@id/icCloud" android:checked="true"/>
+                        <TextView android:id="@+id/tvCloudText" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="ON Cloud" android:textColor="#FFFFFF" android:textSize="22sp" android:layout_toRightOf="@id/icCloud" android:layout_toEndOf="@id/icCloud" android:layout_toLeftOf="@id/cbCloud" android:layout_toStartOf="@id/cbCloud" android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_alignTop="@id/icCloud" android:fontFamily="sans-serif-light"/>
+                        <TextView android:id="@+id/tvCloudDesc" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Allow to copy your game saves and progress to ON Cloud." android:textColor="#888888" android:layout_below="@id/tvCloudText" android:layout_alignLeft="@id/tvCloudText" android:layout_alignStart="@id/tvCloudText" android:layout_toLeftOf="@id/cbCloud" android:layout_toStartOf="@id/cbCloud" android:layout_marginTop="4dp" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/icLoc" android:layout_width="48dp" android:layout_height="48dp" app:srcCompat="@drawable/ic_permissions_location_glass" android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:layout_marginTop="4dp"/>
+                        <CheckBox android:id="@+id/cbLoc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_alignTop="@id/icLoc" android:checked="true"/>
+                        <TextView android:id="@+id/tvLocText" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Location" android:textColor="#FFFFFF" android:textSize="22sp" android:layout_toRightOf="@id/icLoc" android:layout_toEndOf="@id/icLoc" android:layout_toLeftOf="@id/cbLoc" android:layout_toStartOf="@id/cbLoc" android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_alignTop="@id/icLoc" android:fontFamily="sans-serif-light"/>
+                        <TextView android:id="@+id/tvLocDesc" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Allow ON Services to use your geolocation to provide personalized data." android:textColor="#888888" android:layout_below="@id/tvLocText" android:layout_alignLeft="@id/tvLocText" android:layout_alignStart="@id/tvLocText" android:layout_toLeftOf="@id/cbLoc" android:layout_toStartOf="@id/cbLoc" android:layout_marginTop="4dp" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/icData" android:layout_width="48dp" android:layout_height="48dp" app:srcCompat="@drawable/ic_data_glass" android:layout_alignParentLeft="true" android:layout_alignParentStart="true" android:layout_marginTop="4dp"/>
+                        <CheckBox android:id="@+id/cbData" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:layout_alignTop="@id/icData" android:checked="false"/>
+                        <TextView android:id="@+id/tvDataText" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Data analytics" android:textColor="#FFFFFF" android:textSize="22sp" android:layout_toRightOf="@id/icData" android:layout_toEndOf="@id/icData" android:layout_toLeftOf="@id/cbData" android:layout_toStartOf="@id/cbData" android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_alignTop="@id/icData" android:fontFamily="sans-serif-light"/>
+                        <TextView android:id="@+id/tvDataDesc" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Allow Oldschool Network to collect data on the performance." android:textColor="#888888" android:layout_below="@id/tvDataText" android:layout_alignLeft="@id/tvDataText" android:layout_alignStart="@id/tvDataText" android:layout_toLeftOf="@id/cbData" android:layout_toStartOf="@id/cbData" android:layout_marginTop="4dp" android:textSize="12sp" android:fontFamily="sans-serif"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_marginTop="32dp">
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:orientation="horizontal" android:gravity="center_vertical">
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnBackParams" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:rotation="180" android:background="@drawable/btn_outline_gray" android:padding="12dp" android:layout_marginRight="16dp" android:layout_marginEnd="16dp" app:tint="#FFFFFF"/>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/btnNextParams" android:layout_width="50dp" android:layout_height="50dp" app:srcCompat="@drawable/ic_arrow_right" android:background="@drawable/btn_outline_blue" android:padding="12dp" app:tint="#FFFFFF"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="24dp">
+            <TextView android:id="@+id/tvWelcomeText" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Welcome, User!" android:textColor="#00BCD4" android:textSize="32sp" android:gravity="center" android:layout_marginTop="64dp" android:fontFamily="sans-serif-light"/>
+
+            <RelativeLayout android:layout_width="160dp" android:layout_height="160dp" android:layout_centerInParent="true">
+                <ImageView android:id="@+id/ivFinalAvatar" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" app:srcCompat="@drawable/ic_profile_placeholder"/>
+            </RelativeLayout>
+
+            <LinearLayout android:id="@+id/btnStart" android:layout_width="match_parent" android:layout_height="50dp" android:layout_alignParentBottom="true" android:background="@drawable/btn_outline_blue" android:gravity="center" android:orientation="horizontal" android:clickable="true" android:focusable="true">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Start" android:textColor="#FFFFFF" android:textSize="18sp" android:fontFamily="sans-serif" android:layout_marginRight="8dp" android:layout_marginEnd="8dp"/>
+                <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" app:srcCompat="@drawable/ic_arrow_send" app:tint="#FFFFFF"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </ViewFlipper>
+    <TextView android:layout_width="wrap_content" android:layout_height="40dp" android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:layout_marginRight="16dp" android:padding="10dp" android:text="Help" android:textColor="#00BCD4" android:onClick="openAccountHelp" android:clickable="true" android:focusable="true" android:background="@drawable/bg_core_main" />
+</RelativeLayout>

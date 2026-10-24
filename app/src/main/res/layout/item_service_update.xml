@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="20dp" android:paddingBottom="20dp">
+ <TextView android:id="@+id/serviceReleaseName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="20sp" android:textColor="#FFFFFF"/>
+ <TextView android:id="@+id/serviceReleaseVersion" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="#BBBBBB" android:layout_marginTop="8dp"/>
+ <Button android:id="@+id/downloadServiceRelease" android:layout_width="match_parent" android:layout_height="48dp" android:textColor="#33B5E5" android:background="@drawable/btn_outline_blue" android:layout_marginTop="12dp"/>
+ <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#44515F" android:layout_marginTop="20dp"/>
+</LinearLayout>

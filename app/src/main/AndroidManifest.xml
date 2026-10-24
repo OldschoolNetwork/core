@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.oldschoolnetwork.core">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <!-- Добавлено разрешение для BootReceiver -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".CoreApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="ON Services"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup,android:icon,android:label,android:roundIcon,android:theme">
+
+        <!-- Главное активити (Ядро) -->
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- SDK Активити для сторонних приложений (Открыто для вызова, прозрачный фон) -->
+        <activity
+            android:name=".QuickAuthActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity android:name=".OnboardingActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".ProfilesActivity" android:exported="false" />
+        <activity android:name=".CropActivity" android:exported="false" />
+        <activity android:name=".AboutActivity" android:exported="false" />
+        <activity android:name=".AchievementsActivity" android:exported="false" />
+        <activity android:name=".BackupsActivity" android:exported="false" />
+        <activity android:name=".BalanceActivity" android:exported="false" />
+        <activity android:name=".CloudSavesActivity" android:exported="false" />
+        <activity android:name=".DeveloperActivity" android:exported="false" />
+        <activity android:name=".LeaderboardsActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".NotificationsActivity" android:exported="false" />
+        <activity android:name=".PasswordVaultActivity" android:exported="false" />
+        <activity android:name=".SessionsActivity" android:exported="false" />
+        <activity android:name=".AccountPanelActivity" android:exported="false" />
+        <activity android:name=".SmartAuthProtectionActivity" android:exported="false" />
+        <activity android:name=".UpdateActivity" android:exported="false" />
+
+        <!-- Сервисы -->
+        <service
+            android:name=".ONAuthenticatorService"
+            android:permission="android.permission.ACCOUNT_MANAGER"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service
+            android:name=".ONCoreService"
+            android:exported="true" />
+
+        <!-- Ресиверы -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.updates" android:exported="false" android:grantUriPermissions="true"><meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/update_paths"/></provider>
+        <service android:name=".ServiceDownloadService" android:exported="false"/>
+        <receiver android:name=".UpdateCheckReceiver" android:exported="false"/>
+        <receiver android:name=".ServiceInstallReceiver" android:exported="false"><intent-filter><action android:name="android.intent.action.MY_PACKAGE_REPLACED"/></intent-filter></receiver>
+    </application>
+</manifest>

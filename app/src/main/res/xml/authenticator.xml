@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="com.oldschoolnetwork.core"
+    android:icon="@mipmap/ic_launcher"
+    android:smallIcon="@mipmap/ic_launcher"
+    android:label="@string/on_account_type_label"
+    android:accountPreferences="@xml/account_preferences" />

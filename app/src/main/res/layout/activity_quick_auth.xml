@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootDimBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000">
+
+    <LinearLayout
+        android:id="@+id/bottomSheetContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_core_dialog"
+        android:orientation="vertical"
+        android:paddingTop="24dp">
+
+        <LinearLayout
+            android:id="@+id/headerIcons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Логотип твоего Ядра (ON) -->
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/on_account_logo_emblem_gradient_gray" />
+
+            <!-- Стрелочка -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_arrow_send" />
+
+            <!-- Иконка стороннего приложения (скругление сделаем через Glide в коде) -->
+            <ImageView
+                android:id="@+id/ivCallingAppIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_app_icon_placeholder" />
+
+        </LinearLayout>
+
+
+
+        <!-- ЭКРАН 1: ВЫБОР АККАУНТА -->
+        <LinearLayout
+            android:id="@+id/stateSelectAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="Select account"
+                android:textColor="#00BCD4"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/tvAppSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="To work with App"
+                android:textColor="#E0E0E0"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#00BCD4" />
+
+            <!-- Контейнер для динамической подгрузки реальных аккаунтов -->
+            <LinearLayout
+                android:id="@+id/llAccountsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Тот самый запасной шаблон аккаунта (скрыт, используется в Java) -->
+            <LinearLayout
+                android:id="@+id/btnAccountTemplate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_holo_selectable"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/ivTemplateAvatar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_profile_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTemplateUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="\@Username"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tvTemplateEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="email@onbox.online"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#55FFFFFF" />
+
+            <!-- Кнопки управления без бага с оранжевым выделением -->
+            <LinearLayout
+                android:id="@+id/btnAddAccount"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_holo_selectable"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_account_add" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:text="Add account"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnOpenDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_holo_selectable"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_manager" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:text="Account Dashboard"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ЭКРАН 2: РАЗРЕШЕНИЯ -->
+        <LinearLayout
+            android:id="@+id/statePermissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="App will get these permissions"
+                android:textColor="#00BCD4"
+                android:textSize="22sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#55FFFFFF" />
+
+            <!-- Контейнер для динамических разрешений -->
+            <LinearLayout
+                android:id="@+id/llPermissionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="#55FFFFFF" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <!-- Убрал clickable="true", чтобы не было оранжевого бага. Клик обрабатывает Java -->
+                <TextView
+                    android:id="@+id/btnCancelAuth"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_outline_gray"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnContinueAuth"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_outline_blue"
+                    android:gravity="center"
+                    android:text="Continue"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#00BCD4" />
+
+            <!-- Плашка выбранного аккаунта снизу -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/ivPermSelectedAvatar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_profile_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvPermSelectedUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="\@Username"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tvPermSelectedEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="email@onbox.online"
+                        android:textColor="#555555"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ЭКРАН 3: ЗАГРУЗКА -->
+        <LinearLayout
+            android:id="@+id/stateLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivLoadingAvatar"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_profile_placeholder" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Logging in as"
+                android:textColor="#E0E0E0"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvLoadingUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="\@Username"
+                android:textColor="#00BCD4"
+                android:textSize="28sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/footerSecured"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/authProgressBar"
+                style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Secured by ON Auth Protection"
+                    android:textColor="#00BCD4"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/on_auth_security_emblem" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

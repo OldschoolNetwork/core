@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient" >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/appBarLayout"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="parallax">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="32dp"
+                    android:paddingBottom="24dp"
+                    android:gravity="center">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:cardCornerRadius="50dp"
+                        app:cardBackgroundColor="#333333"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:id="@+id/iv_avatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            app:srcCompat="@drawable/unknown_avatar" />
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:id="@+id/btn_account_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:padding="8dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/tv_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Loading..."
+                            android:textColor="#FFFFFF"
+                            android:textSize="22sp"/>
+
+                        <ImageView
+                            android:id="@+id/ic_change"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            app:srcCompat="@drawable/ic_change"
+                            app:tint="#00BCD4" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="..."
+                        android:textColor="#888888"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:id="@+id/tv_on_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID: ..."
+                        android:textColor="#00BCD4"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_manage_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Manage Profile"
+                        android:textColor="#00BCD4"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:background="?android:attr/selectableItemBackground"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btn_refresh"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:padding="8dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    app:srcCompat="@drawable/ic_refresh"
+                    app:tint="#FFFFFF"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+            </FrameLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            app:tabMode="scrollable"
+            app:tabIndicatorColor="#00BCD4"
+            app:tabIndicatorHeight="2.5dp"
+            app:tabSelectedTextColor="#00BCD4"
+            app:tabTextColor="#888888"
+            app:tabIconTint="@color/tab_icon_color"
+            app:tabTextAppearance="@style/DashboardTabTextAppearance"
+            app:tabRippleColor="@null"
+            app:tabIndicatorFullWidth="true"/>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#333333"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.oldschoolnetwork.core.NonSwipeableViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

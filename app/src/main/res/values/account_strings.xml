@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <string name="on_account_type_label">ON Account</string>
+ <string name="on_account_manage_title">Manage ON Account</string>
+ <string name="on_account_manage_summary">Open the Oldschool Network account dashboard</string>
+</resources>

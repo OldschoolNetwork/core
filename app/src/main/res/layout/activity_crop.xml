@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1A1A">
+
+    <FrameLayout
+        android:id="@+id/crop_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_panel" />
+
+    <ImageView
+        android:id="@+id/btn_close_crop"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="12dp"
+        app:srcCompat="@drawable/ic_cross_cancel"
+        app:tint="#FFFFFF" />
+
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="#222222"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <LinearLayout
+            android:id="@+id/btn_select_another"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_gallery"
+                app:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Gallery"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_camera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_camera"
+                app:tint="#FFFFFF" />
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Camera"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_keep"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_arrow_right"
+                app:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Keep"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

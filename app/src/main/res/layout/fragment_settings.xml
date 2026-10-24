@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll_settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- About services -->
+        <LinearLayout
+            android:id="@+id/row_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_info" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="About ON Services Core" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Version, developers, etc." android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#FF444444" />
+
+        <LinearLayout
+            android:id="@+id/row_account_support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_help" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Account support" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Contact support and read replies" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+        <!-- My Profiles -->
+        <LinearLayout
+            android:id="@+id/row_profiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_profile" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="My Profiles" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Manage profiles, linked to your ON Account" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#FF444444" android:visibility="gone" />
+
+        <!-- Password Vault -->
+        <LinearLayout
+            android:id="@+id/row_password_vault_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:visibility="gone">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_key" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Password Vault" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Add new passwords or see existing" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#FF444444" />
+
+        <!-- Update -->
+        <LinearLayout
+            android:id="@+id/row_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_update" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="System Update" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Check for new updates for services" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#FF444444" android:visibility="gone" />
+
+        <!-- Notifications -->
+        <LinearLayout
+            android:id="@+id/row_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:visibility="gone">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_notifications" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Notifications" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Manage ON notification preferences" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#FF444444" android:visibility="gone" />
+
+        <!-- Developer Options -->
+        <LinearLayout
+            android:id="@+id/row_developer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:visibility="gone">
+
+            <ImageView android:layout_width="36dp" android:layout_height="36dp"
+                app:srcCompat="@drawable/ic_developer" app:tint="#FFFFFFFF" android:layout_marginRight="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Developer Options" android:textSize="16sp" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Debug info, logs, test tools" android:textSize="12sp" android:textColor="#FF888888" />
+            </LinearLayout>
+
+            <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                app:srcCompat="@drawable/ic_arrow_right" app:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+ <Preference android:title="@string/on_account_manage_title" android:summary="@string/on_account_manage_summary">
+  <intent android:action="android.intent.action.VIEW" android:targetPackage="com.oldschoolnetwork.core" android:targetClass="com.oldschoolnetwork.core.DashboardActivity"/>
+ </Preference>
+</PreferenceScreen>

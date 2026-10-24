@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@drawable/bg_core_main">
+ <TextView android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:paddingLeft="20dp" android:text="Service updates" android:textSize="22sp" android:textColor="#33B5E5"/>
+ <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#33B5E5"/>
+ <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+   <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Core checks updates for Core and Store. Store manages updates for other applications." android:textColor="#CCCCCC" android:textSize="15sp"/>
+   <CheckBox android:id="@+id/automaticServiceChecks" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Check for service updates automatically" android:textColor="#FFFFFF" android:layout_marginTop="16dp"/>
+   <CheckBox android:id="@+id/automaticServiceInstall" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Download and install updates automatically (full installation)" android:textColor="#FFFFFF"/>
+   <TextView android:id="@+id/serviceUpdateStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#33B5E5" android:paddingTop="20dp" android:paddingBottom="20dp"/>
+   <ProgressBar android:id="@+id/serviceDownloadProgress" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="12dp" android:layout_marginBottom="16dp" android:max="100" android:visibility="gone"/>
+   <TextView android:id="@+id/serviceDownloadStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#33B5E5" android:paddingBottom="16dp"/>
+   <LinearLayout android:id="@+id/serviceUpdateRows" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"/>
+   <Button android:id="@+id/enableServiceNotifications" android:layout_width="match_parent" android:layout_height="48dp" android:text="Enable download notifications" android:textColor="#FFFFFF" android:background="@drawable/btn_outline_blue" android:visibility="gone" android:layout_marginTop="16dp"/>
+   <CheckBox android:id="@+id/showServiceUpdateNotices" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Show service update notices" android:textColor="#FFFFFF" />
+   <Button android:id="@+id/updateAllServices" android:layout_width="match_parent" android:layout_height="48dp" android:text="Update all" android:textColor="#00BCD4" android:background="@drawable/btn_outline_blue" android:visibility="gone" android:layout_marginTop="16dp" />
+   <Button android:id="@+id/checkServiceUpdates" android:layout_width="match_parent" android:layout_height="48dp" android:text="Check for updates" android:textColor="#FFFFFF" android:background="@drawable/btn_outline_blue" android:layout_marginTop="20dp"/>
+   <Button android:id="@+id/installDownloadedService" android:layout_width="match_parent" android:layout_height="48dp" android:text="Install downloaded APK" android:textColor="#FFFFFF" android:background="@drawable/btn_outline_blue" android:visibility="gone" android:layout_marginTop="16dp"/>
+   <Button android:id="@+id/backServiceUpdates" android:layout_width="match_parent" android:layout_height="48dp" android:text="Back" android:textColor="#FFFFFF" android:background="@drawable/btn_outline_gray" android:layout_marginTop="16dp"/>
+  </LinearLayout>
+ </ScrollView>
+</LinearLayout>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_core_dialog"
+    android:orientation="vertical"
+    android:paddingTop="16dp">
+
+    <!-- Идеально выровненная шапка -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingHorizontal="24dp">
+
+        <!-- Логотип чуть меньше и строго по центру -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/on_auth_mid" />
+
+        <!-- Крестик меньше визуально, но с удобной зоной нажатия -->
+        <ImageView
+            android:id="@+id/btn_close_switcher"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            app:srcCompat="@drawable/ic_cross_cancel"
+            app:tint="#FFFFFF" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#00BCD4" />
+
+    <!-- Список аккаунтов -->
+    <LinearLayout
+        android:id="@+id/account_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp" />
+
+    <!-- Кнопка Add account -->
+    <LinearLayout
+        android:id="@+id/btn_add_account"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp">
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            app:srcCompat="@drawable/ic_account_add"
+            app:tint="#FFFFFF"
+            android:layout_marginLeft="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:text="Add account"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Кнопка Open account settings -->
+    <LinearLayout
+        android:id="@+id/btn_account_settings"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp">
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            app:srcCompat="@drawable/ic_account_manage"
+            app:tint="#FFFFFF"
+            android:layout_marginLeft="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:text="Open account settings"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Футер безопасности -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Secured by ON Auth Protection"
+            android:textColor="#00BCD4"
+            android:textSize="12sp" />
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/on_auth_security_emblem" />
+    </LinearLayout>
+</LinearLayout>
