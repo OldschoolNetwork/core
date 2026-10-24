@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.56 — 2026-10-24
+
+Core 0.56 improves account management on classic Android.
+
+- Saved accounts are matched by ON ID. Legacy email labels and duplicate nicknames are merged without discarding saved credentials.
+- The system authenticator uses Android's account-manager permission. Built-in Settings handlers can see the account while unrelated apps do not receive blanket access.
+- Active sessions, account preferences and support requests are available through native screens backed by the account API.
+- Profile and avatar changes report success after the server accepts them. Password changes are supported in Manage Profile.
+- Signing out removes the local account and requests termination of its server session.
+- Onboarding Help opens the Account documentation category.
+
+Android 4.0 / API 14 and later. Universal APK, signed with the persistent ON certificate. Eight account, onboarding and dashboard checks passed on an isolated Android 5.1 emulator. Xiaomi firmware behavior still needs physical-device verification.
+
 ## 0.55 — 2026-10-19
 
 Core 0.55 fixes a crash after password entry. Both sign-in and registration now focus the native verification button instead of the removed verification WebView. Built successfully and signed with the persistent ON key. Physical Mi 5 retesting is still needed.
