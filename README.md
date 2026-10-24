@@ -2,32 +2,27 @@
 
 The account and shared service layer for Oldschool Network on classic Android devices.
 
-## Download
+Current alpha: **0.56** (version code 11). Android 4.0 / API 14 or later.
 
-Current build: **alpha 0.55**, version code **10**.
+## Features
 
-- [Download ON Core Services](https://github.com/OldschoolNetwork/core/releases/download/alpha-0.55/ON-Core-Services-0.55.apk)
-- [Release notes and checksums](https://github.com/OldschoolNetwork/core/releases/tag/alpha-0.55)
-- [All ON downloads](https://oldschoolnetwork.online/downloads/)
+- ON Account sign-in and saved-account selection.
+- Profile and avatar editing, account preferences, active sessions and support requests.
+- Android Settings account integration and onboarding.
+- Core and Store update checks, with separate controls for scheduled checks and automatic installation. Silent installation requires compatible full system setup.
 
-Android **4.0 / API 14 or newer**. This is a universal APK. It uses the persistent Oldschool Network signing key.
+## Downloads
 
-## What it does
+Get signed APKs from [GitHub Releases](https://github.com/OldschoolNetwork/core/releases). Use [All downloads](https://oldschoolnetwork.online/downloads/) for individual services and archived versions. The main Download button provides the Classic Installer.
 
-Core manages ON Account sign-in, onboarding and Android system accounts. It supplies the account interface used by ON Store and checks published updates for Core and Store. Scheduled update checks can be turned off. Full system installations can download and install service updates automatically; this has a separate switch.
+## Installation
 
-If you install Core on its own, use its Updates screen to get Store once a compatible Store release is published in the ON catalog.
+Read the [installation guides](https://oldschoolnetwork.online/downloads/docs/categories/installation/). Full system setup requires a compatible rooted device; ordinary installation uses Android's package installer. Update an existing installation with APKs signed by the same certificate.
 
-## Alpha status
+This is alpha software. Physical-device and firmware compatibility can differ from emulator results.
 
-These builds are under development. Android 5.1 checks have passed, but that does not establish compatibility with every device or ROM. Full root installation, Google component removal, Magisk overlays and silent updates still need testing on physical devices. Keep a backup and recovery access before using system installation.
+## Project
 
-The ON release key differs from the old Android debug key. Android cannot update those old development packages in place; plan a one-time migration and keep any data you need.
+[Website](https://oldschoolnetwork.online/) · [Help](https://oldschoolnetwork.online/downloads/docs/) · [Platform Rules](https://api.oldschoolnetwork.online/v1/on-account/web/terms.html)
 
-## Help and problems
-
-- [Oldschool Network](https://oldschoolnetwork.online/)
-- [Documentation](https://oldschoolnetwork.online/downloads/docs/)
-- [Changelog](CHANGELOG.md)
-
-Include your device model, Android version, application version and the steps that led to a problem. Remove account tokens and private information from logs before posting them.
+[Bluesky](https://bsky.app/profile/oldnet.bsky.social) · [YouTube](https://www.youtube.com/@oldschoolnetwork) · [X](https://x.com/oldschool_net) · [Telegram](https://t.me/OldschoolNetwork)
