@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.57 — 2026-10-24
+
+- Account settings use consistent support controls and expose active sessions.
+- My Profiles shows linked service profiles. Recovery and Help links remain available throughout sign-in.
+- Sign-in reuses its server token and checks existing accounts by their canonical identity to prevent duplicate additions.
+- Services offers Update all and per-service update notices, with dismissal and notification preferences.
+- Ordinary installations queue downloaded updates for Android installation. Full setup uses the existing silent installer where supported.
+- The full-install guide link is easier to identify; the redundant Core App status row has been removed.
+
+Validation: 11 checks passed on an isolated Android 5.1 emulator. Silent installation on physical Xiaomi firmware was not tested in this release.
+
 ## 0.56 — 2026-10-24
 
 Core 0.56 improves account management on classic Android.
