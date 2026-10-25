@@ -1,8 +1,25 @@
+<p align="center">
+  <img src="docs/branding/app-icon.png" width="96" alt="Application icon">
+</p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/branding/oldschool-network-dark.svg">
+    <img src="docs/branding/oldschool-network-light.svg" width="200" alt="Oldschool Network">
+  </picture>
+</p>
+
 # ON Core Services
 
 The account and shared service layer for Oldschool Network on classic Android devices.
 
 Current alpha: **0.57** (version code 12). Android 4.0 / API 14 or later.
+
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/sign-in.png" width="240" alt="ON Account sign-in">
+  <img src="docs/screenshots/about.png" width="240" alt="Core version and service information">
+</p>
 
 ## Features
 
