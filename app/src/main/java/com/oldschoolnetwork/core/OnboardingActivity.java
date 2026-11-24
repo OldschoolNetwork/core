@@ -82,7 +82,7 @@ public class OnboardingActivity extends Activity {
     private boolean acceptedCurrentTerms;
     private WebView termsWebView;
     private ImageView btnNextTerms, btnCreatePasswordVis, btnLoginPasswordVis, ivFinalAvatar, ivLoginAvatar, btnConfirmPasswordVis;
-    private TextView tvWelcomeText, tvOtpHeader, tvLoginWelcomeTitle, tvLoginSubtitleEmail, tvVerifyStatus, tvSetupStatus;
+    private TextView tvWelcomeText, tvLoginWelcomeTitle, tvLoginSubtitleEmail, tvVerifyStatus, tvSetupStatus;
 
     // Ошибки
     private TextView tvLoginEmailError, tvLoginPassError, tvCreateEmailError, tvCreatePassError, tvDetailsError;
@@ -134,7 +134,7 @@ public class OnboardingActivity extends Activity {
         mailView.getSettings().setBlockNetworkLoads(true);
         mailView.getSettings().setAllowContentAccess(false);
         mailView.getSettings().setSaveFormData(false);
-        mailView.setBackgroundColor(0);
+        mailView.setBackgroundColor(android.graphics.Color.WHITE);
         mailView.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view,String url) {
                 if ("https://on-account.invalid/".equals(url) || "about:blank".equals(url)) {
@@ -143,9 +143,16 @@ public class OnboardingActivity extends Activity {
                 }
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view,String url) {
-                if (mailBusy || flipper.getDisplayedChild()!=SCREEN_OTP) return true;
+                if (flipper.getDisplayedChild()!=SCREEN_OTP) return true;
                 android.net.Uri uri = android.net.Uri.parse(url);
                 if ("onmail".equals(uri.getScheme())) {
+                    if ("help".equals(uri.getHost())) { openAccountHelp(view); return true; }
+                    if (mailBusy) return true;
+                    if ("back".equals(uri.getHost())) {
+                        mailChallenge = "";
+                        finishMailScreen(isLoginFlow ? SCREEN_LOGIN_PASS : SCREEN_CONFIRM);
+                        return true;
+                    }
                     if ("resend".equals(uri.getHost()) && android.os.SystemClock.elapsedRealtime() >= nextSendAt) sendEmailRequest(null);
                     if ("verify".equals(uri.getHost()) && !mailChallenge.isEmpty()) {
                         String code = uri.getQueryParameter("code");
@@ -172,7 +179,6 @@ public class OnboardingActivity extends Activity {
         btnStart = (LinearLayout) findViewById(R.id.btnStart);
 
         tvWelcomeText = (TextView) findViewById(R.id.tvWelcomeText);
-        tvOtpHeader = (TextView) findViewById(R.id.tvOtpHeader);
         tvLoginWelcomeTitle = (TextView) findViewById(R.id.tvLoginWelcomeTitle);
         tvLoginSubtitleEmail = (TextView) findViewById(R.id.tvLoginSubtitleEmail);
         tvVerifyStatus = (TextView) findViewById(R.id.tvVerifyStatus);
@@ -377,12 +383,6 @@ public class OnboardingActivity extends Activity {
         });
 
         findViewById(R.id.btnBackCreatePass).setOnClickListener(v -> flipper.setDisplayedChild(SCREEN_CREATE_EMAIL));
-
-        findViewById(R.id.btnBackOtp).setOnClickListener(v -> {
-            if (mailBusy) return;
-            mailChallenge = "";
-            flipper.setDisplayedChild(isLoginFlow ? SCREEN_LOGIN_PASS : SCREEN_CONFIRM);
-        });
 
         findViewById(R.id.btnNextDetails).setOnClickListener(v -> {
             if(etRegName.getText().toString().trim().isEmpty()) {
@@ -620,9 +620,15 @@ public class OnboardingActivity extends Activity {
         mailDestination = "";
         nextSendAt = 0;
         mailGeneration++;
-        tvOtpHeader.setText("Check your email");
+        findViewById(R.id.onboardingHelp).setVisibility(View.GONE);
         flipper.setDisplayedChild(SCREEN_OTP);
         sendEmailRequest(null);
+    }
+
+    private void finishMailScreen(int nextScreen) {
+        mailView.removeCallbacks(mailTimer);
+        flipper.setDisplayedChild(nextScreen);
+        findViewById(R.id.onboardingHelp).setVisibility(View.VISIBLE);
     }
 
     private void mailNotice(String message) {
@@ -634,10 +640,9 @@ public class OnboardingActivity extends Activity {
         @Override public void run() {
             mailView.removeCallbacks(this);
             long seconds = Math.max(0,(nextSendAt - android.os.SystemClock.elapsedRealtime() + 999) / 1000);
-            if (mailPageReady) mailView.loadUrl("javascript:window.mailState(" + JSONObject.quote(mailMessage)
-                    + "," + mailBusy + "," + !mailChallenge.isEmpty() + "," + seconds + "," + mailGeneration + ");void(0)");
-            findViewById(R.id.btnBackOtp).setEnabled(!mailBusy);
-            if (seconds > 0 && !isFinishing()) mailView.postDelayed(this, 1000);
+            if (mailPageReady && flipper.getDisplayedChild() == SCREEN_OTP) mailView.loadUrl("javascript:window.mailState(" + JSONObject.quote(mailMessage)
+                    + "," + mailBusy + "," + !mailChallenge.isEmpty() + "," + seconds + "," + mailGeneration + "," + isLoginFlow + ");void(0)");
+            if (seconds > 0 && !isFinishing() && flipper.getDisplayedChild() == SCREEN_OTP) mailView.postDelayed(this, 1000);
         }
     };
 
@@ -664,14 +669,14 @@ public class OnboardingActivity extends Activity {
                         mailChallenge = result.optString("challenge");
                         mailDestination = result.optString("destination");
                         mailGeneration++;
-                        mailNotice("A code was sent to " + mailDestination + ".");
+                        mailNotice(mailDestination);
                     } else if (code != null && status.equals("success") && result.optJSONObject("user") != null && !result.optString("token").isEmpty()) {
                         mailChallenge = "";
                         mailRequest = null;
                         completeVerifiedAccount(result);
                     } else {
                         if (code == null && isLoginFlow && "Invalid credentials.".equals(result.optString("message"))) {
-                            flipper.setDisplayedChild(SCREEN_LOGIN_PASS);
+                            finishMailScreen(SCREEN_LOGIN_PASS);
                             tvLoginPassError.setText("Incorrect password. Try again.");
                             tvLoginPassError.setVisibility(View.VISIBLE);
                         }
@@ -713,7 +718,7 @@ public class OnboardingActivity extends Activity {
         }
         String password = (isLoginFlow ? etLoginPassword : etCreatePassword).getText().toString();
         persistAccountToSystem(validatedRealEmail,password,result.optString("token"));
-        flipper.setDisplayedChild(SCREEN_PARAMS);
+        finishMailScreen(SCREEN_PARAMS);
     }
 
     private void loadCurrentTerms() {

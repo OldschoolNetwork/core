@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.60 — 2026-11-24
+
+The email verification screen now runs entirely in WebView, with a redesigned header, code entry, resend timer, help icon, and back control.
+
 ## 0.58 — 2026-11-24
 
 Sign in and create an ON Account with a six-digit email code. The new verification screen includes a resend timer and spam-folder guidance. Saved sessions can still be reused.
