@@ -16,15 +16,34 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class CoreFlowRegressionTest {
-    @Test public void onboardingKeepsStepOnRotationAndHasNativeVerification() throws Exception {
-        Instrumentation i=InstrumentationRegistry.getInstrumentation();
-        OnboardingActivity activity=(OnboardingActivity)i.startActivitySync(new Intent(i.getTargetContext(),OnboardingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    @Test public void onboardingKeepsVerificationOnRotation() throws Exception {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        OnboardingActivity activity = (OnboardingActivity)instrumentation.startActivitySync(
+                new Intent(instrumentation.getTargetContext(),OnboardingActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         try {
-            i.runOnMainSync(()->{((ViewFlipper)activity.findViewById(R.id.onboardingFlipper)).setDisplayedChild(5);activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);});
-            Thread.sleep(700);i.waitForIdleSync();
-            i.runOnMainSync(()->{assertFalse(activity.isDestroyed());assertEquals(5,((ViewFlipper)activity.findViewById(R.id.onboardingFlipper)).getDisplayedChild());assertTrue(((android.widget.TextView)activity.findViewById(R.id.otpAvailabilityNotice)).getText().toString().contains("No code is sent"));activity.findViewById(R.id.btnSendOtp).performClick();});
-            i.waitForIdleSync();i.runOnMainSync(()->assertEquals(6,((ViewFlipper)activity.findViewById(R.id.onboardingFlipper)).getDisplayedChild()));
-        } finally {i.runOnMainSync(activity::finish);}
+            ViewFlipper pages = (ViewFlipper)activity.findViewById(R.id.onboardingFlipper);
+            android.webkit.WebView mail = (android.webkit.WebView)activity.findViewById(R.id.mailArtwork);
+            instrumentation.runOnMainSync(() -> {
+                pages.setDisplayedChild(5);
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            });
+            long deadline = android.os.SystemClock.elapsedRealtime() + 10000;
+            String state = "";
+            while (android.os.SystemClock.elapsedRealtime() < deadline) {
+                java.util.concurrent.ArrayBlockingQueue<String> result = new java.util.concurrent.ArrayBlockingQueue<>(1);
+                instrumentation.runOnMainSync(() -> mail.evaluateJavascript(
+                    "document.getElementById('submit') ? document.getElementById('submit').disabled : document.title+' '+location.protocol+' '+(document.body ? document.body.innerText.slice(0,160) : document.readyState)",result::offer));
+                state = result.poll(2,java.util.concurrent.TimeUnit.SECONDS);
+                if ("true".equals(state)) break;
+                Thread.sleep(100);
+            }
+            assertEquals("The local form must not accept a code before a server challenge.","true",state);
+            instrumentation.runOnMainSync(() -> {
+                assertFalse(activity.isFinishing());
+                assertEquals(5,pages.getDisplayedChild());
+                assertTrue(mail.getSettings().getBlockNetworkLoads());
+            });
+        } finally {instrumentation.runOnMainSync(activity::finish);}
     }
     @Test public void missingStoreDownloadsAndOffersInstall() throws Exception {
         Instrumentation i=InstrumentationRegistry.getInstrumentation();android.content.Context context=i.getTargetContext();

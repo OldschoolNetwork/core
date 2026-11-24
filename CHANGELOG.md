@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.58 — 2026-11-24
+
+Sign in and create an ON Account with a six-digit email code. The new verification screen includes a resend timer and spam-folder guidance. Saved sessions can still be reused.
+
 ## 0.57 — 2026-10-24
 
 - Account settings use consistent support controls and expose active sessions.

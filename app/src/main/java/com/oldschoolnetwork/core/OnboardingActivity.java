@@ -17,7 +17,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.JavascriptInterface;
+
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -119,6 +119,8 @@ public class OnboardingActivity extends Activity {
         }
 
         initViews();
+        String renew = getIntent().getStringExtra("renew_account");
+        if (renew != null) etLoginEmail.setText(renew);
         setupWebViews();
         setupNavigation();
         setupPasswordToggles();
@@ -127,7 +129,39 @@ public class OnboardingActivity extends Activity {
 
     private void initViews() {
         flipper = (ViewFlipper) findViewById(R.id.onboardingFlipper);
-        findViewById(R.id.btnSendOtp).setOnClickListener(v -> new WebAppInterface().onOtpSuccess());
+        mailView = (WebView)findViewById(R.id.mailArtwork);
+        mailView.getSettings().setJavaScriptEnabled(true);
+        mailView.getSettings().setBlockNetworkLoads(true);
+        mailView.getSettings().setAllowContentAccess(false);
+        mailView.getSettings().setSaveFormData(false);
+        mailView.setBackgroundColor(0);
+        mailView.setWebViewClient(new WebViewClient() {
+            @Override public void onPageFinished(WebView view,String url) {
+                if ("https://on-account.invalid/".equals(url) || "about:blank".equals(url)) {
+                    mailPageReady = true;
+                    mailTimer.run();
+                }
+            }
+            @Override public boolean shouldOverrideUrlLoading(WebView view,String url) {
+                if (mailBusy || flipper.getDisplayedChild()!=SCREEN_OTP) return true;
+                android.net.Uri uri = android.net.Uri.parse(url);
+                if ("onmail".equals(uri.getScheme())) {
+                    if ("resend".equals(uri.getHost()) && android.os.SystemClock.elapsedRealtime() >= nextSendAt) sendEmailRequest(null);
+                    if ("verify".equals(uri.getHost()) && !mailChallenge.isEmpty()) {
+                        String code = uri.getQueryParameter("code");
+                        if (code!=null && code.matches("[0-9]{6}")) sendEmailRequest(code);
+                    }
+                }
+                return true;
+            }
+        });
+        mailView.getSettings().setAllowFileAccess(false);
+        try (BufferedReader page = new BufferedReader(new java.io.InputStreamReader(getAssets().open("mail.html"),"UTF-8"))) {
+            StringBuilder html = new StringBuilder();
+            String line;
+            while ((line = page.readLine()) != null) html.append(line).append('\n');
+            mailView.loadDataWithBaseURL("https://on-account.invalid/",html.toString(),"text/html","UTF-8",null);
+        } catch (java.io.IOException e) { throw new IllegalStateException("Missing bundled email form",e); }
         termsWebView = (WebView) findViewById(R.id.termsWebView);
 
         btnNextTerms = (ImageView) findViewById(R.id.btnNextTerms);
@@ -339,15 +373,16 @@ public class OnboardingActivity extends Activity {
             tvCreatePassError.setVisibility(View.GONE);
 
             isLoginFlow = false;
-            tvOtpHeader.setText("Verification");
-            flipper.setDisplayedChild(SCREEN_OTP);
-
-            findViewById(R.id.btnSendOtp).requestFocus(View.FOCUS_DOWN);
+            flipper.setDisplayedChild(SCREEN_DETAILS);
         });
 
         findViewById(R.id.btnBackCreatePass).setOnClickListener(v -> flipper.setDisplayedChild(SCREEN_CREATE_EMAIL));
 
-        findViewById(R.id.btnBackOtp).setOnClickListener(v -> flipper.setDisplayedChild(isLoginFlow ? SCREEN_LOGIN_PASS : SCREEN_CREATE_PASS));
+        findViewById(R.id.btnBackOtp).setOnClickListener(v -> {
+            if (mailBusy) return;
+            mailChallenge = "";
+            flipper.setDisplayedChild(isLoginFlow ? SCREEN_LOGIN_PASS : SCREEN_CONFIRM);
+        });
 
         findViewById(R.id.btnNextDetails).setOnClickListener(v -> {
             if(etRegName.getText().toString().trim().isEmpty()) {
@@ -415,12 +450,12 @@ public class OnboardingActivity extends Activity {
             flipper.setDisplayedChild(SCREEN_WELCOME);
         });
 
-        findViewById(R.id.btnBackParams).setOnClickListener(v -> flipper.setDisplayedChild(isLoginFlow ? SCREEN_OTP : SCREEN_TERMS));
+        findViewById(R.id.btnBackParams).setVisibility(View.GONE);
 
         btnStart.setOnClickListener(v -> {
             if (getSharedPreferences("ON_SECURE_PREFS", Context.MODE_PRIVATE).getString("server_token", "").isEmpty()) {
                 android.widget.Toast.makeText(this, "Finishing sign-in. Please wait or retry if the connection failed.", android.widget.Toast.LENGTH_LONG).show();
-                addAccountToSystem();
+                flipper.setDisplayedChild(SCREEN_LOGIN_EMAIL);
                 return;
             }
             finish();
@@ -563,86 +598,122 @@ public class OnboardingActivity extends Activity {
         }).start();
     }
 
-    private void verifyPasswordAPI(final String email, final String password) {
-        runOnUiThread(() -> pbLoginPass.setVisibility(View.VISIBLE));
+    private JSONObject mailRequest;
+    private String mailChallenge = "", mailDestination = "";
+    private boolean mailBusy;
+    private long nextSendAt;
+    private WebView mailView;
+    private String mailMessage = "";
+    private int mailGeneration;
+    private boolean mailPageReady;
 
+    private void verifyPasswordAPI(String login, String password) {
+        try {
+            mailRequest = new JSONObject().put("login",login).put("password",password);
+            isLoginFlow = true;
+            beginMail();
+        } catch (org.json.JSONException e) { throw new IllegalStateException(e); }
+    }
+
+    private void beginMail() {
+        mailChallenge = "";
+        mailDestination = "";
+        nextSendAt = 0;
+        mailGeneration++;
+        tvOtpHeader.setText("Check your email");
+        flipper.setDisplayedChild(SCREEN_OTP);
+        sendEmailRequest(null);
+    }
+
+    private void mailNotice(String message) {
+        mailMessage = message;
+        mailTimer.run();
+    }
+
+    private final Runnable mailTimer = new Runnable() {
+        @Override public void run() {
+            mailView.removeCallbacks(this);
+            long seconds = Math.max(0,(nextSendAt - android.os.SystemClock.elapsedRealtime() + 999) / 1000);
+            if (mailPageReady) mailView.loadUrl("javascript:window.mailState(" + JSONObject.quote(mailMessage)
+                    + "," + mailBusy + "," + !mailChallenge.isEmpty() + "," + seconds + "," + mailGeneration + ");void(0)");
+            findViewById(R.id.btnBackOtp).setEnabled(!mailBusy);
+            if (seconds > 0 && !isFinishing()) mailView.postDelayed(this, 1000);
+        }
+    };
+
+    private void sendEmailRequest(String code) {
+        if (mailBusy || mailRequest == null) return;
+        final JSONObject body;
+        try {
+            body = new JSONObject(mailRequest.toString()).put("email_verification",1);
+            if (code != null) body.put("challenge",mailChallenge).put("code",code);
+        } catch (org.json.JSONException e) { throw new IllegalStateException(e); }
+        mailBusy = true;
+        mailTimer.run();
+        mailNotice(code == null ? "Requesting your email code…" : "Checking your code…");
+        final String flow = isLoginFlow ? "login" : "register";
         new Thread(() -> {
             try {
-                URL url = new URL("https://api.oldschoolnetwork.online/v1/on-account/api/login.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
-
-                JSONObject jsonParam = new JSONObject();
-                jsonParam.put("login", email);
-                jsonParam.put("password", password);
-
-                OutputStream os = conn.getOutputStream();
-                os.write(jsonParam.toString().getBytes("UTF-8"));
-                os.close();
-
-                InputStream is = conn.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) response.append(line);
-                reader.close();
-
-                final JSONObject res = new JSONObject(response.toString());
-                final String status = res.optString("status", "");
-
+                JSONObject result = CoreSession.request("email_access.php?flow="+flow,body);
                 runOnUiThread(() -> {
-                    pbLoginPass.setVisibility(View.GONE);
-                    if (status.equals("success")) {
-                        JSONObject userObj = res.optJSONObject("user");
-                        if (userObj != null) {
-                            validatedRealEmail = userObj.optString("email", email);
-                            currentOnId = userObj.optString("on_id", currentOnId);
-                            currentUsername = userObj.optString("username", currentUsername);
-                            currentName = userObj.optString("name", currentName);
-                            currentSurname = userObj.optString("surname", currentSurname);
-                            currentPhone = userObj.optString("phone", currentPhone);
-                            currentAvatar = userObj.optString("avatar_base64", currentAvatar);
-                            for (Account existing : AccountManager.get(this).getAccountsByType(ONAccount.ACCOUNT_TYPE)) {
-                                String id=AccountManager.get(this).getUserData(existing,"on_id"), nick=AccountManager.get(this).getUserData(existing,"username"), mail=AccountManager.get(this).getUserData(existing,"email");
-                                if ((!currentOnId.isEmpty() && currentOnId.equalsIgnoreCase(id)) || existing.name.equalsIgnoreCase("@"+currentUsername) || (nick!=null&&nick.equalsIgnoreCase(currentUsername)) || (mail!=null&&mail.equalsIgnoreCase(validatedRealEmail))) {
-                                    verifyingSession=false;
-                                    new androidx.appcompat.app.AlertDialog.Builder(this).setTitle("Account already added").setMessage("This ON Account is already on this device. Select it from Switch account.").setPositiveButton("OK",(dialog,which)->finish()).show();
-                                    return;
-                                }
-                            }
-
-
-                            SharedPreferences.Editor ed = getSharedPreferences("ON_SECURE_PREFS", Context.MODE_PRIVATE).edit();
-                            ed.putString("email", validatedRealEmail);
-                            ed.putString("on_id", currentOnId);
-                            ed.putString("username", currentUsername);
-                            ed.putString("name", currentName);
-                            ed.putString("surname", currentSurname);
-                            ed.putString("phone", currentPhone);
-                            ed.putString("avatar_base64", currentAvatar);
-                            ed.commit();
-                        }
-
-                        pendingServerToken = res.optString("token", "");
-                        tvOtpHeader.setText("2-step verification");
-                        flipper.setDisplayedChild(SCREEN_OTP);
-
-                        findViewById(R.id.btnSendOtp).requestFocus(View.FOCUS_DOWN);
+                    if (isFinishing()) return;
+                    mailBusy = false;
+                    nextSendAt = Math.max(nextSendAt,android.os.SystemClock.elapsedRealtime()+1000L*result.optInt("retry_after",0));
+                    String status = result.optString("status");
+                    if (status.equals("code_required")) {
+                        mailChallenge = result.optString("challenge");
+                        mailDestination = result.optString("destination");
+                        mailGeneration++;
+                        mailNotice("A code was sent to " + mailDestination + ".");
+                    } else if (code != null && status.equals("success") && result.optJSONObject("user") != null && !result.optString("token").isEmpty()) {
+                        mailChallenge = "";
+                        mailRequest = null;
+                        completeVerifiedAccount(result);
                     } else {
-                        tvLoginPassError.setText("Incorrect password. Try again.");
-                        tvLoginPassError.setVisibility(View.VISIBLE);
+                        if (code == null && isLoginFlow && "Invalid credentials.".equals(result.optString("message"))) {
+                            flipper.setDisplayedChild(SCREEN_LOGIN_PASS);
+                            tvLoginPassError.setText("Incorrect password. Try again.");
+                            tvLoginPassError.setVisibility(View.VISIBLE);
+                        }
+                        if (status.equals("expired")) mailChallenge = "";
+                        mailNotice(result.optString("message","Could not complete verification."));
                     }
+                    mailTimer.run();
                 });
             } catch (Exception e) {
                 runOnUiThread(() -> {
-                    pbLoginPass.setVisibility(View.GONE);
-                    tvLoginPassError.setText("Network error. Try again.");
-                    tvLoginPassError.setVisibility(View.VISIBLE);
+                    if (isFinishing()) return;
+                    mailBusy = false;
+                    mailTimer.run();
+                    mailNotice("Could not reach email verification. Check your connection and try again.");
                 });
             }
-        }).start();
+        },"on-account-email").start();
+    }
+
+    private void completeVerifiedAccount(JSONObject result) {
+        JSONObject user = result.optJSONObject("user");
+        validatedRealEmail = user.optString("email");
+        currentOnId = user.optString("on_id");
+        currentUsername = user.optString("username");
+        currentName = user.optString("name");
+        currentSurname = user.optString("surname");
+        currentPhone = user.optString("phone");
+        currentAvatar = user.optString("avatar_base64");
+        if (isLoginFlow) {
+            AccountManager manager = AccountManager.get(this);
+            for (Account account : manager.getAccountsByType(ONAccount.ACCOUNT_TYPE)) {
+                if ((currentOnId.equals(manager.getUserData(account,"on_id")) || account.name.equalsIgnoreCase("@"+currentUsername))
+                        && !account.name.equals(getIntent().getStringExtra("renew_account"))) {
+                    new androidx.appcompat.app.AlertDialog.Builder(this).setTitle("Account already added")
+                        .setMessage("Select this account from Switch account.").setPositiveButton("OK",(d,w)->finish()).show();
+                    return;
+                }
+            }
+        }
+        String password = (isLoginFlow ? etLoginPassword : etCreatePassword).getText().toString();
+        persistAccountToSystem(validatedRealEmail,password,result.optString("token"));
+        flipper.setDisplayedChild(SCREEN_PARAMS);
     }
 
     private void loadCurrentTerms() {
@@ -654,8 +725,8 @@ public class OnboardingActivity extends Activity {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
                     String line; while ((line=reader.readLine())!=null) html.append(line).append('\n');
                 } finally { connection.disconnect(); }
-                if (!html.toString().contains("var termsVersion='2026-10-19.1'")) throw new java.io.IOException("The server has not published the current rules yet.");
-                runOnUiThread(() -> termsWebView.loadDataWithBaseURL("https://api.oldschoolnetwork.online/v1/on-account/web/terms.html", html.toString(), "text/html", "UTF-8", null));
+                if (!html.toString().contains("var termsVersion='2026-11-23.1'")) throw new java.io.IOException("The server has not published the current rules yet.");
+                runOnUiThread(() -> termsWebView.loadDataWithBaseURL("https://api.oldschoolnetwork.online/v1/on-account/web/terms.html", html.toString().replace("<html lang=\"en\"", "<html data-core=\"true\" lang=\"en\""), "text/html", "UTF-8", null));
             } catch (Exception error) { runOnUiThread(() -> {
                 String message = error.getMessage() != null && error.getMessage().contains("current rules")
                         ? "The server has not published the current Platform Rules yet. Registration will be available after the server update."
@@ -667,65 +738,14 @@ public class OnboardingActivity extends Activity {
     }
     private void registerUserAPI() {
         if (!acceptedCurrentTerms) { flipper.setDisplayedChild(SCREEN_TERMS); loadCurrentTerms(); return; }
-        new Thread(() -> {
-            try {
-                URL url = new URL("https://api.oldschoolnetwork.online/v1/on-account/api/register.php");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
-
-                JSONObject jsonParam = new JSONObject();
-                jsonParam.put("terms_accepted", true); jsonParam.put("terms_version", "2026-10-19.1");
-                jsonParam.put("email", etCreateEmail.getText().toString().trim());
-                jsonParam.put("password", etCreatePassword.getText().toString());
-                jsonParam.put("name", etRegName.getText().toString().trim());
-                jsonParam.put("surname", etRegSurname.getText().toString().trim());
-                jsonParam.put("username", etRegUsername.getText().toString().replace("@","").trim());
-
-                OutputStream os = conn.getOutputStream();
-                os.write(jsonParam.toString().getBytes("UTF-8"));
-                os.close();
-
-                InputStream is = conn.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) response.append(line);
-                reader.close();
-
-                final JSONObject res = new JSONObject(response.toString());
-
-                runOnUiThread(() -> {
-                    if ("success".equals(res.optString("status"))) {
-                        currentOnId = res.optString("on_id", "");
-                        currentName = etRegName.getText().toString().trim();
-                        currentSurname = etRegSurname.getText().toString().trim();
-                        currentUsername = etRegUsername.getText().toString().replace("@", "").trim();
-                        currentPhone = "";
-                        currentAvatar = "";
-                        getSharedPreferences("ON_SECURE_PREFS", Context.MODE_PRIVATE)
-                                .edit().putString("on_id", currentOnId).commit();
-
-                        addAccountToSystem(etCreateEmail.getText().toString().trim(), etCreatePassword.getText().toString());
-                        flipper.setDisplayedChild(SCREEN_PARAMS);
-                    } else {
-                        String serverError = res.optString("message", "Unknown server error");
-                        tvSetupStatus.setText("Server Error:\n" + serverError);
-                        tvSetupStatus.setTextColor(0xFFFF5252);
-                        setupProgress.setVisibility(View.GONE);
-                        btnTryAgainSetup.setVisibility(View.VISIBLE);
-                    }
-                });
-            } catch (Exception e) {
-                runOnUiThread(() -> {
-                    tvSetupStatus.setText("Network error.\nPlease try again later.");
-                    tvSetupStatus.setTextColor(0xFFFF5252);
-                    setupProgress.setVisibility(View.GONE);
-                    btnTryAgainSetup.setVisibility(View.VISIBLE);
-                });
-            }
-        }).start();
+        try {
+            isLoginFlow = false;
+            mailRequest = new JSONObject().put("terms_accepted",true).put("terms_version","2026-11-23.1")
+                .put("email",etCreateEmail.getText().toString().trim()).put("password",etCreatePassword.getText().toString())
+                .put("name",etRegName.getText().toString().trim()).put("surname",etRegSurname.getText().toString().trim())
+                .put("username",etRegUsername.getText().toString().replace("@","").trim());
+            beginMail();
+        } catch (org.json.JSONException e) { throw new IllegalStateException(e); }
     }
 
     private void saveUserPreferences() {
@@ -737,27 +757,6 @@ public class OnboardingActivity extends Activity {
         editor.commit();
     }
 
-    private void addAccountToSystem() {
-        String userEmail = isLoginFlow ? validatedRealEmail : etCreateEmail.getText().toString().trim();
-        String password = isLoginFlow ? etLoginPassword.getText().toString() : etCreatePassword.getText().toString();
-        addAccountToSystem(userEmail, password);
-    }
-
-    private boolean verifyingSession;
-    private String pendingServerToken="";
-    private void addAccountToSystem(String userEmail, String password) {
-        if (isLoginFlow && !pendingServerToken.isEmpty()) { persistAccountToSystem(userEmail,password,pendingServerToken); pendingServerToken=""; return; }
-        if (verifyingSession) return;
-        verifyingSession = true;
-        new Thread(()->{
-            try{
-                JSONObject response=CoreSession.login(userEmail,password);
-                JSONObject user=response.getJSONObject("user");
-                final String token=response.getString("token");
-                runOnUiThread(()->{verifyingSession=false; currentOnId=user.optString("on_id",currentOnId);currentUsername=user.optString("username",currentUsername);persistAccountToSystem(userEmail,password,token);});
-            }catch(Exception error){runOnUiThread(()->{verifyingSession=false; android.widget.Toast.makeText(this,error.getMessage(),android.widget.Toast.LENGTH_LONG).show();});}
-        },"on-verify-session").start();
-    }
     private void persistAccountToSystem(String userEmail, String password,String serverToken) {
         try {
             SharedPreferences prefs = getSharedPreferences("ON_SECURE_PREFS", Context.MODE_PRIVATE);
@@ -895,40 +894,19 @@ public class OnboardingActivity extends Activity {
     private void setupWebViews() {
         WebSettings termsSettings = termsWebView.getSettings();
         termsSettings.setJavaScriptEnabled(true);
-        termsSettings.setDomStorageEnabled(true);
-        termsWebView.setWebViewClient(new WebViewClient());
-        termsWebView.addJavascriptInterface(new WebAppInterface(), "ONCore");
-    }
-
-    private class WebAppInterface {
-        @JavascriptInterface
-        public void onOtpSuccess() {
-            runOnUiThread(() -> {
-                if (isLoginFlow) {
-                    addAccountToSystem();
-                    flipper.setDisplayedChild(SCREEN_PARAMS);
-                } else {
-                    flipper.setDisplayedChild(SCREEN_DETAILS);
+        termsSettings.setAllowFileAccess(false);
+        termsSettings.setAllowContentAccess(false);
+        termsSettings.setBlockNetworkLoads(true);
+        termsWebView.setWebViewClient(new WebViewClient() {
+            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (flipper.getDisplayedChild() == SCREEN_TERMS &&
+                        ("onterms://accept".equals(url) || "onterms://revoke".equals(url))) {
+                    acceptedCurrentTerms = url.endsWith("accept");
+                    btnNextTerms.setAlpha(acceptedCurrentTerms ? 1f : 0.3f);
+                    btnNextTerms.setClickable(acceptedCurrentTerms);
                 }
-            });
-        }
-
-        @JavascriptInterface
-        public void onTermsAccepted() {
-            runOnUiThread(() -> {
-                acceptedCurrentTerms = true;
-                btnNextTerms.setAlpha(1.0f);
-                btnNextTerms.setClickable(true);
-            });
-        }
-
-        @JavascriptInterface
-        public void onTermsRevoked() {
-            runOnUiThread(() -> {
-                acceptedCurrentTerms = false;
-                btnNextTerms.setAlpha(0.3f);
-                btnNextTerms.setClickable(false);
-            });
-        }
+                return true;
+            }
+        });
     }
 }

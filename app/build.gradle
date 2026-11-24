@@ -8,8 +8,8 @@ android {
         applicationId "com.oldschoolnetwork.core"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 12
-        versionName "ONC-alpha-0.57"
+        versionCode 13
+        versionName "ONC-alpha-0.58"
 
         vectorDrawables.useSupportLibrary = true
     }

@@ -399,10 +399,24 @@ public class QuickAuthActivity extends Activity {
                 profile.email = targetEmail;
                 try {
                     android.accounts.AccountManager manager=android.accounts.AccountManager.get(this);
-                    JSONObject response=CoreSession.login(SystemAccounts.privateLogin(this,selectedAccount),manager.getPassword(selectedAccount));
+                    String token = manager.getUserData(selectedAccount,"server_token");
+                    JSONObject response = token == null || token.isEmpty() ? new JSONObject() :
+                        CoreSession.request("ecosystem.php?action=oauth_saved_profile", new JSONObject().put("token",token));
+                    if (!"ok".equals(response.optString("status"))) {
+                        runOnUiThread(() -> {
+                            stateLoading.setVisibility(View.GONE);
+                            stateSelectAccount.setVisibility(View.VISIBLE);
+                            if ("restricted".equals(response.optString("status"))) {
+                                android.widget.Toast.makeText(this,"This account is restricted.",android.widget.Toast.LENGTH_LONG).show();
+                            } else {
+                                startActivity(new Intent(this,OnboardingActivity.class).putExtra("renew_account",targetEmail));
+                            }
+                        });
+                        return;
+                    }
                     JSONObject user=response.getJSONObject("user");
                     profile.email=user.optString("email",targetEmail);profile.onId=user.optString("on_id","");profile.username=user.optString("username","");profile.name=user.optString("name","");profile.surname=user.optString("surname","");profile.phone=user.optString("phone","");profile.avatarBase64=user.optString("avatar_base64","");
-                    manager.setUserData(selectedAccount,"server_token",response.getString("token"));
+
                 } catch(Exception error) {
                     runOnUiThread(()->{stateLoading.setVisibility(View.GONE);stateSelectAccount.setVisibility(View.VISIBLE);android.widget.Toast.makeText(this,"Sign in again to verify this account. "+error.getMessage(),android.widget.Toast.LENGTH_LONG).show();});return;
                 }
