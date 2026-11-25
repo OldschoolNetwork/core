@@ -120,7 +120,8 @@ public class OnboardingActivity extends Activity {
 
         initViews();
         String renew = getIntent().getStringExtra("renew_account");
-        if (renew != null) etLoginEmail.setText(renew);
+        String suggestedLogin = getIntent().getStringExtra("renew_login");
+        if (suggestedLogin != null || renew != null) etLoginEmail.setText(suggestedLogin != null ? suggestedLogin : renew);
         setupWebViews();
         setupNavigation();
         setupPasswordToggles();

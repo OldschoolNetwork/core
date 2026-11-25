@@ -1,49 +1,161 @@
 package com.oldschoolnetwork.core;
 
 import android.os.Bundle;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.LinkedHashMap;
 
 /** Native controls for the same authenticated dashboard endpoints used by the website. */
-public class AccountPanelActivity extends AppCompatActivity {
+public class AccountPanelActivity extends Activity {
+    private static final int HOLO_BLUE = 0xff33b5e5;
+    private static final int SIGN_IN = 201;
     private LinearLayout content;
     private String panel;
     private boolean busy;
-    private JSONObject lastData;
     protected void onCreate(Bundle state){
         super.onCreate(state);panel=getIntent().getStringExtra("panel");if(panel==null)panel="settings";
-        LinearLayout page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setBackgroundColor(0xff151515);
+        LinearLayout page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setBackgroundResource(R.drawable.bg_core_main);
         LinearLayout toolbar=new LinearLayout(this);toolbar.setGravity(android.view.Gravity.CENTER_VERTICAL);toolbar.setPadding(dp(8),dp(8),dp(16),dp(8));
-        ImageButton back=new androidx.appcompat.widget.AppCompatImageButton(this);back.setImageResource(R.drawable.ic_arrow_right);back.setScaleType(ImageView.ScaleType.CENTER_INSIDE);back.setPadding(dp(14),dp(14),dp(14),dp(14));back.setRotation(180);back.setColorFilter(Color.WHITE);back.setBackgroundColor(Color.TRANSPARENT);back.setContentDescription("Back");back.setOnClickListener(v->finish());toolbar.addView(back,new LinearLayout.LayoutParams(dp(48),dp(48)));
-        TextView title=label(panel.equals("sessions")?"Active sessions":panel.equals("support")?"Account support":panel.equals("profiles")?"My profiles":"Account preferences",22,0xff00BCD4);toolbar.addView(title);page.addView(toolbar);
-        View divider=new View(this);divider.setBackgroundColor(0xff00BCD4);page.addView(divider,new LinearLayout.LayoutParams(-1,dp(2)));
+        ImageButton back = new ImageButton(this);
+        back.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_arrow_left));
+        back.setColorFilter(HOLO_BLUE);
+        back.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        back.setPadding(dp(15), dp(12), dp(15), dp(12));
+        back.setBackgroundResource(R.drawable.bg_holo_selectable);
+        back.setContentDescription("Back");
+        back.setOnClickListener(v -> finish());
+        toolbar.addView(back, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        TextView title = label(panel.equals("sessions") ? "Active sessions"
+                : panel.equals("support") ? "Account support"
+                : panel.equals("profiles") ? "My profiles" : "Account preferences", 22, HOLO_BLUE);
+        toolbar.addView(title);
+        page.addView(toolbar);
+        View divider = new View(this);
+        divider.setBackgroundColor(HOLO_BLUE);
+        page.addView(divider, new LinearLayout.LayoutParams(-1, dp(2)));
         ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);content.setPadding(dp(20),dp(16),dp(20),dp(24));scroll.addView(content);page.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));setContentView(page);load();
     }
     private int dp(int value){return Math.round(value*getResources().getDisplayMetrics().density);}
     private TextView label(String text,int size,int color){TextView view=new TextView(this);view.setText(text);view.setTextSize(size);view.setTextColor(color);view.setPadding(0,dp(6),0,dp(6));return view;}
-    private Button button(String text,Runnable action){Button button=new Button(this);button.setText(text);button.setAllCaps(false);button.setOnClickListener(v->action.run());content.addView(button,new LinearLayout.LayoutParams(-1,dp(52)));return button;}
-    private void showError(String error){content.removeAllViews();content.addView(label(error,16,Color.LTGRAY));button("Retry",this::load);}
-    private void load(){
-        content.removeAllViews();content.addView(label("Loading…",16,Color.LTGRAY));
-        AccountApi.requestAsync(this,"account_dashboard_data",new JSONObject(),(data,error)->{
-            if(isFinishing()||(android.os.Build.VERSION.SDK_INT>=17&&isDestroyed()))return;
-            if(error!=null){showError(error);return;}lastData=data;render(data);
+    private Button button(String text, Runnable action) {
+        Button button = new Button(this);
+        button.setText(text);
+        button.setAllCaps(false);
+        button.setTextColor(Color.WHITE);
+        button.setBackgroundResource(R.drawable.btn_outline_gray);
+        if (action != null) button.setOnClickListener(v -> action.run());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
+        button.setMinHeight(dp(48));
+        params.topMargin = dp(8);
+        content.addView(button, params);
+        return button;
+    }
+
+    private void showError(Exception error) {
+        content.removeAllViews();
+        boolean signIn = error instanceof AccountApi.SignInRequired;
+        String message = error instanceof java.io.IOException ? error.getMessage() : null;
+        content.addView(label(message == null ? "Could not load your account. Try again." : message, 16, Color.LTGRAY));
+        button(signIn ? "Sign in" : "Retry", signIn ? this::signIn : this::load);
+    }
+
+    private void signIn() {
+        String onId = getSharedPreferences("ON_SECURE_PREFS", MODE_PRIVATE).getString("on_id", "");
+        Intent intent = new Intent(this, OnboardingActivity.class);
+        if (!onId.isEmpty()) {
+            AccountManager manager = AccountManager.get(this);
+            for (Account account : manager.getAccountsByType(ONAccount.ACCOUNT_TYPE)) {
+                if (onId.equals(manager.getUserData(account, "on_id"))) {
+                    intent.putExtra("renew_account", account.name);
+                    break;
+                }
+            }
+            intent.putExtra("renew_login", onId);
+        }
+        startActivityForResult(intent, SIGN_IN);
+    }
+
+    @Override protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (request == SIGN_IN && result == RESULT_OK) load();
+    }
+
+    private void load() {
+        content.removeAllViews();
+        content.addView(label("Loading…", 16, Color.LTGRAY));
+        String action = panel.equals("sessions") ? "account_sessions" : "account_dashboard_data";
+        AccountApi.requestAsyncDetailed(this, action, new JSONObject(), (data, error) -> {
+            if (isFinishing() || (android.os.Build.VERSION.SDK_INT >= 17 && isDestroyed())) return;
+            if (error != null) {
+                showError(error);
+                return;
+            }
+            content.removeAllViews();
+            if (panel.equals("sessions")) sessions(data.optJSONArray("sessions"), data.optInt("current", -1));
+            else if (panel.equals("support")) support(data.optJSONArray("tickets"));
+            else if (panel.equals("profiles")) profiles(data.optJSONArray("profiles"));
+            else preferences(data.optJSONObject("settings"));
         });
     }
-    private void render(JSONObject data){content.removeAllViews();if(panel.equals("sessions"))sessions(data.optJSONArray("sessions"));else if(panel.equals("support"))support(data.optJSONArray("tickets"));else if(panel.equals("profiles"))profiles(data.optJSONArray("profiles"));else preferences(data.optJSONObject("settings"));}
-    private void sessions(JSONArray sessions){
-        content.addView(label("Sessions connected to your ON Account",16,Color.LTGRAY));
-        if(sessions==null||sessions.length()==0)content.addView(label("No active sessions were returned.",16,Color.WHITE));
-        if(sessions!=null)for(int i=0;i<sessions.length();i++){
-            JSONObject session=sessions.optJSONObject(i);if(session==null)continue;
-            content.addView(label(session.optString("client_id","ON Account"),18,Color.WHITE));content.addView(label(session.optString("user_agent")+"\n"+session.optString("ip_address")+"\nSigned in: "+session.optString("created_at"),13,Color.LTGRAY));
-            button("Terminate session",()->new androidx.appcompat.app.AlertDialog.Builder(this).setTitle("Terminate session?").setMessage("This device or browser will need to sign in again.").setNegativeButton("Cancel",null).setPositiveButton("Terminate",(d,w)->{JSONObject request=new JSONObject();try{request.put("session_id",session.optInt("id"));}catch(Exception ignored){}mutate("account_revoke_session",request,this::load);}).show());
+
+    private void sessions(JSONArray sessions, int currentId) {
+        content.addView(label("Devices and browsers signed in to your ON Account", 16, Color.LTGRAY));
+        if (sessions == null || sessions.length() == 0) {
+            content.addView(label("No active sessions.", 16, Color.WHITE));
+            return;
+        }
+        for (int i = 0; i < sessions.length(); i++) {
+            JSONObject session = sessions.optJSONObject(i);
+            if (session == null) continue;
+            int id = session.optInt("id", -1);
+            boolean current = id == currentId;
+            String client = session.optString("client_id");
+            String device = session.optString("device", "");
+            if (device.isEmpty() || "null".equals(device)) {
+                device = "on_core".equals(client) ? "ON Core Services" : "ON Account · " + client;
+            }
+            content.addView(label(device + (current ? " · This device" : ""), 18, current ? HOLO_BLUE : Color.WHITE));
+            String summary = "Signed in: " + session.optString("created_at") + "\nExpires: " + session.optString("expires_at");
+            content.addView(label(summary, 14, Color.LTGRAY));
+            String details = session.optString("user_agent") + "\nIP address: " + session.optString("ip_address");
+            TextView info = label(details, 14, Color.LTGRAY);
+            info.setVisibility(View.GONE);
+            Button expand = button("Show details", null);
+            expand.setOnClickListener(v -> {
+                boolean show = info.getVisibility() != View.VISIBLE;
+                info.setVisibility(show ? View.VISIBLE : View.GONE);
+                expand.setText(show ? "Hide details" : "Show details");
+            });
+            content.addView(info);
+            if (!current && id > 0) {
+                button("Sign out this session", () -> new AlertDialog.Builder(this)
+                        .setTitle("Sign out this session?")
+                        .setMessage("This device or browser will need to sign in again.")
+                        .setNegativeButton("Cancel", null)
+                        .setPositiveButton("Sign out", (dialog, which) -> {
+                            JSONObject request = new JSONObject();
+                            try {
+                                request.put("session_id", id);
+                            } catch (org.json.JSONException impossible) {
+                                return;
+                            }
+                            mutate("account_revoke_session", request, this::load);
+                        }).show());
+            }
+            View divider = new View(this);
+            divider.setBackgroundColor(0x364e7897);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, dp(1));
+            params.topMargin = dp(14);
+            content.addView(divider, params);
         }
     }
     private void profiles(JSONArray profiles){

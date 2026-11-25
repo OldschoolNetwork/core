@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.62 — 2026-11-25
+
+The Active sessions screen and native account panels use Android Holo. Active sessions identifies this device, shows session details, and offers sign-in when the current session has expired.
+
 ## 0.61 — 2026-11-25
 
 Confirm browser sign-ins by matching a number on a signed-in phone. Open ON Core while signing in. Declining blocks the request and gives access to account security. Minimum Android version remains 4.0.

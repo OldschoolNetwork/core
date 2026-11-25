@@ -64,9 +64,9 @@
         <activity android:name=".NotificationsActivity" android:exported="false" />
         <activity android:name=".PasswordVaultActivity" android:exported="false" />
         <activity android:name=".PhonePromptActivity" android:exported="false" android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
-        <activity android:name=".SessionsActivity" android:exported="false" />
-        <activity android:name=".AccountPanelActivity" android:exported="false" />
-        <activity android:name=".SmartAuthProtectionActivity" android:exported="false" />
+        <activity android:name=".SessionsActivity" android:exported="false" android:theme="@android:style/Theme.Holo.NoActionBar" />
+        <activity android:name=".AccountPanelActivity" android:exported="false" android:theme="@android:style/Theme.Holo.NoActionBar" />
+        <activity android:name=".SmartAuthProtectionActivity" android:exported="false" android:theme="@android:style/Theme.Holo.NoActionBar" />
         <activity android:name=".UpdateActivity" android:exported="false" />
 
         <!-- Сервисы -->
