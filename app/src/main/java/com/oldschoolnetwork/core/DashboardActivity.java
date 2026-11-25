@@ -83,9 +83,18 @@ public class DashboardActivity extends AppCompatActivity {
         setupViewPager();
     }
 
+    private final PhonePromptWatcher phonePrompts = new PhonePromptWatcher(this);
+
+    @Override
+    protected void onPause() {
+        phonePrompts.stop();
+        super.onPause();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        phonePrompts.start();
         validateSessionIntegrity();
 
         // Магия: если разлогинились (кнопкой Sign Out), проверяем наличие других аккаунтов

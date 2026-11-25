@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.61 — 2026-11-25
+
+Confirm browser sign-ins by matching a number on a signed-in phone. Open ON Core while signing in. Declining blocks the request and gives access to account security. Minimum Android version remains 4.0.
+
 ## 0.60 — 2026-11-24
 
 The email verification screen now runs entirely in WebView, with a redesigned header, code entry, resend timer, help icon, and back control.
